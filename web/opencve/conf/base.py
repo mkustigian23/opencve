@@ -86,6 +86,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "opencve.context_processors.canonical_url_context",
+                "opencve.context_processors.opencve_version",
             ],
         },
     },

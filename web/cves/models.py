@@ -135,6 +135,16 @@ class Cve(BaseModel):
 
     @property
     def cvssV4_0(self):
+        mitre_metrics = (
+            self.mitre_json.get("containers", {}).get("cna", {}).get("metrics", [])
+        )
+        cvss4_entries = [m for m in mitre_metrics if "cvssV4_0" in m]
+        if len(cvss4_entries) > 1:
+            first = cvss4_entries[0]["cvssV4_0"]
+            return {
+                "score": first.get("baseScore"),
+                "vector": first.get("vectorString"),
+            }
         return self.metrics.get("cvssV4_0", {}).get("data", {})
 
     @property

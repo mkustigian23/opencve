@@ -180,3 +180,35 @@ def test_cve_model_advisories_property(create_cve):
     assert cve.advisories == [
         {"source": "euvd", "id": "EUVD-2025-0001", "title": "EUVD Advisory"},
     ]
+
+
+@pytest.mark.django_db
+def test_cve_model_cvssV4_0_uses_first_mitre_entry_when_multiple(create_cve):
+    cve = create_cve("CVE-2021-44228")
+
+    
+    cve._mitre_json = {
+        "containers": {
+            "cna": {
+                "metrics": [
+                    {
+                        "cvssV4_0": {
+                            "baseScore": 5.9,
+                            "vectorString": "CVSS:4.0/AV:L/AC:L/AT:N/PR:H/UI:N/VC:L/VI:N/VA:N/SC:H/SI:N/SA:N",
+                        }
+                    },
+                    {
+                        "cvssV4_0": {
+                            "baseScore": 0,
+                            "vectorString": "CVSS:4.0/AV:L/AC:L/AT:P/PR:H/UI:N/VC:N/VI:N/VA:N/SC:N/SI:N/SA:N",
+                        }
+                    },
+                ]
+            }
+        }
+    }
+
+    assert cve.cvssV4_0 == {
+        "score": 5.9,
+        "vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:H/UI:N/VC:L/VI:N/VA:N/SC:H/SI:N/SA:N",
+    }

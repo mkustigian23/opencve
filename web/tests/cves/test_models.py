@@ -186,7 +186,6 @@ def test_cve_model_advisories_property(create_cve):
 def test_cve_model_cvssV4_0_uses_first_mitre_entry_when_multiple(create_cve):
     cve = create_cve("CVE-2021-44228")
 
-    
     cve._mitre_json = {
         "containers": {
             "cna": {

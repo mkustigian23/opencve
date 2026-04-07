@@ -74,6 +74,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "opencve.urls"
 
+# templates
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",

@@ -42,7 +42,7 @@ def canonical_url_context(request):
 def opencve_version(request):
     """Expose the OpenCVE version to all templates."""
     version_file = os.path.join(
-        os.path.dirname(__file__), "../../VERSION"  # web/opencve/  # root VERSION file
+        os.path.dirname(__file__), "../../VERSION"
     )
     try:
         with open(os.path.abspath(version_file)) as f:

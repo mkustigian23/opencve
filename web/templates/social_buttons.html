@@ -9,8 +9,8 @@
     <form method="post" action="{% provider_login_url provider process='login' %}">
         {% csrf_token %}
         <button type="submit" class="btn btn-block btn-default btn-social">
-        {% with "img/icons/"|add:provider|add:".png" as icon %}
-        <i><img src="{% static icon %}"></i> Sign in with {{ provider | capfirst }}
+        {% with "img/icons/"|add:provider.id|add:".png" as icon %}
+        <i><img src="{% static icon %}"></i> Sign in with {{ provider.name }}
         {% endwith %}
         </button>
     </form>

@@ -6,6 +6,8 @@ class SocialProvidersMixin:
         context = super().get_context_data(**kwargs)
 
         providers = get_adapter().list_providers(self.request)
-        context["social_providers"] = [p.app.provider_id for p in providers]
+        context["social_providers"] = [
+            p for p in providers if (not p.uses_apps or not p.app.settings.get("hidden"))
+        ]
 
         return context

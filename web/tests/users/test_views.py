@@ -1,3 +1,5 @@
+from types import SimpleNamespace
+
 import pytest
 from bs4 import BeautifulSoup
 from django.test import override_settings
@@ -38,6 +40,40 @@ def test_login_invalid_credentials(client, create_user, payload, field):
     assert (
         content.strip() == f"The {field} and/or password you specified are not correct."
     )
+
+
+def test_login_uses_provider_objects_for_social_buttons(client, monkeypatch):
+    class FakeProvider:
+        id = "gitlab"
+        name = "GitLab"
+        uses_apps = True
+
+        def __init__(self):
+            self.app = SimpleNamespace(
+                provider_id="gitlab-self-hosted",
+                settings={"gitlab_url": "https://gitlab.example.com"},
+            )
+
+        def get_login_url(self, request, **kwargs):
+            return "/settings/gitlab/login/?process=login"
+
+    class FakeAdapter:
+        def list_providers(self, request):
+            return [FakeProvider()]
+
+    monkeypatch.setattr("users.mixin.get_adapter", lambda *args, **kwargs: FakeAdapter())
+
+    response = client.get(reverse("account_login"))
+
+    assert response.status_code == 200
+    soup = BeautifulSoup(response.content, features="html.parser")
+    form = soup.find("form", action="/settings/gitlab/login/?process=login")
+    assert form is not None
+    assert "Sign in with GitLab" in form.get_text(" ", strip=True)
+    assert form["action"] == "/settings/gitlab/login/?process=login"
+
+    icon = form.find("img")
+    assert icon["src"].endswith("/static/img/icons/gitlab.png")
 
 
 def test_delete_owner_account(auth_client, create_user, create_organization):

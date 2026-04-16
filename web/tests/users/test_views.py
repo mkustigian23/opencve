@@ -61,7 +61,9 @@ def test_login_uses_provider_objects_for_social_buttons(client, monkeypatch):
         def list_providers(self, request):
             return [FakeProvider()]
 
-    monkeypatch.setattr("users.mixin.get_adapter", lambda *args, **kwargs: FakeAdapter())
+    monkeypatch.setattr(
+        "users.mixin.get_adapter", lambda *args, **kwargs: FakeAdapter()
+    )
 
     response = client.get(reverse("account_login"))
 

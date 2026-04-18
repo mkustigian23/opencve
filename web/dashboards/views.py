@@ -26,6 +26,16 @@ class DashboardView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["widgets"] = sorted(list_widgets().values(), key=lambda x: x["name"])
 
+        # If the user has no current organization, do not try to create dashboards
+        if self.request.current_organization is None:
+            context["dashboards"] = []
+            context["default_dashboard_id"] = None
+            context["dashboards_data"] = {
+                "dashboards": context["dashboards"],
+                "default_dashboard_id": context["default_dashboard_id"],
+            }
+            return context
+
         # Retrieve the list of dashboards
         dashboards_qs = Dashboard.objects.filter(
             organization=self.request.current_organization,

@@ -1330,7 +1330,7 @@ def test_invalid_widget_validate_config_handling(
 
 @pytest.mark.django_db
 def test_homepage_does_not_crash_without_current_organization(client, settings):
-    settings.ONBOARDING = False
+    settings.ENABLE_ONBOARDING = False
 
     user = User.objects.create_user(
         username="noorguser",

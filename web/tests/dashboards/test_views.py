@@ -8,6 +8,7 @@ import uuid
 import json
 from django.http import JsonResponse
 from django.http import HttpRequest
+from users.models import User
 
 from dashboards.widgets import list_widgets
 from dashboards.models import Dashboard
@@ -1325,3 +1326,23 @@ def test_invalid_widget_validate_config_handling(
         reverse("load_widget_data", kwargs={"widget_id": widget_id}),
     )
     assert response.status_code == 400
+
+
+@pytest.mark.django_db
+def test_homepage_does_not_crash_without_current_organization(client, settings):
+    settings.ONBOARDING = False
+
+    user = User.objects.create_user(
+        username="noorguser",
+        email="noorguser@example.com",
+        password="TestPass123!",
+    )
+
+    login_ok = client.login(username="noorguser", password="TestPass123!")
+    assert login_ok is True
+
+    response = client.get("/")
+
+    assert response.status_code == 200
+    assert response.context["dashboards"] == []
+    assert response.context["default_dashboard_id"] is None

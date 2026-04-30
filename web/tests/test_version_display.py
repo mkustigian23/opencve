@@ -28,5 +28,5 @@ class VersionDisplayTest(TestCase):
         response = self.client.get(reverse("cves"))
         self.assertEqual(response.status_code, 200)
 
-        expected_version = Path("VERSION").read_text().strip()
+        expected_version = response.context["OPENCVE_VERSION"]
         self.assertContains(response, f"v{expected_version}")

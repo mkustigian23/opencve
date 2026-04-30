@@ -13,8 +13,15 @@ class VersionDisplayTest(TestCase):
             password="testpassword",
             email="test@test.com"
         )
+        # Mark email as verified so the user isn't redirected
+        self.user.emailaddress_set.create(
+            email="test@test.com",
+            verified=True,
+            primary=True
+        )
 
     def test_version_visible_in_sidebar(self):
         self.client.login(username="testuser", password="testpassword")
-        response = self.client.get("/")
+        response = self.client.get("/cves/")
+        self.assertEqual(response.status_code, 200)
         self.assertContains(response, "OPENCVE_VERSION")

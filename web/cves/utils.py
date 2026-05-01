@@ -1,5 +1,7 @@
 import copy
 
+from datetime import timedelta
+from django.utils import timezone
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from nested_lookup import nested_lookup
@@ -297,6 +299,20 @@ def list_filtered_cves(params, user):
     if tag and user.is_authenticated:
         tag = get_object_or_404(UserTag, name=tag, user=user)
         query = query.filter(cve_tags__tags__contains=tag.name, cve_tags__user=user)
+
+    # Filter by created_at in the last N days
+    created_since_days = params.get("created_since_days")
+    if created_since_days:
+        try:
+            created_since_days = int(created_since_days)
+        except (TypeError, ValueError):
+            return Cve.objects.none()
+
+        if created_since_days < 0:
+            return Cve.objects.none()
+
+        cutoff = timezone.now() - timedelta(days=created_since_days)
+        query = query.filter(created_at__gte=cutoff)
 
     return query.all()
 

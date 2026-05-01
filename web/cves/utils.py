@@ -300,7 +300,7 @@ def list_filtered_cves(params, user):
         tag = get_object_or_404(UserTag, name=tag, user=user)
         query = query.filter(cve_tags__tags__contains=tag.name, cve_tags__user=user)
 
-    # Filter by created_at in the last N days
+    # Filter by created_at in the last N days "created_since_days"
     created_since_days = params.get("created_since_days")
     if created_since_days:
         try:

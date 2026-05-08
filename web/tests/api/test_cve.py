@@ -1,5 +1,7 @@
-import pytest
-from django.urls import reverse
+from datetime import timedelta
+from django.utils import timezone
+
+from cves.models import Cve
 
 from organizations.models import OrganizationAPIToken
 from users.models import CveTag, UserTag

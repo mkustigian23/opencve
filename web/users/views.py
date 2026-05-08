@@ -158,5 +158,6 @@ class CustomSignupView(SocialProvidersMixin, SignupView):
             return HttpResponseForbidden("Public registration is disabled.")
         return super().dispatch(request, *args, **kwargs)
 
+
 class CustomConnectionView(LoginRequiredMixin, SocialProvidersMixin, ConnectionsView):
     success_url = reverse_lazy("settings_social")

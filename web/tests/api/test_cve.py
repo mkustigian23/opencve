@@ -8,6 +8,7 @@ from django.utils import timezone
 
 from cves.models import Cve
 
+
 def test_unauthenticated_user(client, auth_client):
     response = client.get(reverse("cve-list"))
     assert response.status_code == 401
@@ -168,6 +169,7 @@ def test_list_cves_with_tag_filter_authenticated_user(
     assert response.status_code == 200
     cve_ids = sorted(c["cve_id"] for c in response.json()["results"])
     assert cve_ids == ["CVE-2021-44228"]
+
 
 @pytest.mark.django_db
 def test_list_cves_with_created_since_days_filter(create_cve, auth_client):

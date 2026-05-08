@@ -88,6 +88,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "opencve.context_processors.canonical_url_context",
                 "opencve.context_processors.opencve_version",
+                "opencve.context_processors.enable_signup_context",
             ],
         },
     },
@@ -298,6 +299,7 @@ V1_DATABASE = env.db(
 
 # Redirect user to onboarding view if they do not belong to an organization
 ENABLE_ONBOARDING = True
+ENABLE_SIGNUP = env.bool("ENABLE_SIGNUP", default=True)
 
 # Maximum number of fields to allow in a CVE Advanced Search query
 CVES_ADVANCED_SEARCH_MAX_FIELDS = 5

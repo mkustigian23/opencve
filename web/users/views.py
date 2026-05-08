@@ -14,6 +14,8 @@ from django.views.generic import (
     UpdateView,
     TemplateView,
 )
+from django.conf import settings
+from django.http import HttpResponseForbidden
 
 from opencve.mixins import RequestViewMixin
 from organizations.models import Membership
@@ -151,8 +153,10 @@ class CustomLoginView(SocialProvidersMixin, LoginView):
 
 
 class CustomSignupView(SocialProvidersMixin, SignupView):
-    pass
-
+    def dispatch(self, request, *args, **kwargs):
+        if not settings.ENABLE_SIGNUP:
+            return HttpResponseForbidden("Public registration is disabled.")
+        return super().dispatch(request, *args, **kwargs)
 
 class CustomConnectionView(LoginRequiredMixin, SocialProvidersMixin, ConnectionsView):
     success_url = reverse_lazy("settings_social")

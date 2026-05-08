@@ -1,5 +1,6 @@
 from urllib.parse import urlencode
 import os
+from django.conf import settings
 
 
 def canonical_url_context(request):
@@ -48,3 +49,7 @@ def opencve_version(request):
     except FileNotFoundError:
         version = "unknown"
     return {"OPENCVE_VERSION": version}
+
+
+def enable_signup_context(request):
+    return {"ENABLE_SIGNUP": settings.ENABLE_SIGNUP}

@@ -1,11 +1,12 @@
+import pytest
+from django.urls import reverse
+
+from organizations.models import OrganizationAPIToken
+from users.models import CveTag, UserTag
 from datetime import timedelta
 from django.utils import timezone
 
 from cves.models import Cve
-
-from organizations.models import OrganizationAPIToken
-from users.models import CveTag, UserTag
-
 
 def test_unauthenticated_user(client, auth_client):
     response = client.get(reverse("cve-list"))
@@ -167,3 +168,23 @@ def test_list_cves_with_tag_filter_authenticated_user(
     assert response.status_code == 200
     cve_ids = sorted(c["cve_id"] for c in response.json()["results"])
     assert cve_ids == ["CVE-2021-44228"]
+
+@pytest.mark.django_db
+def test_list_cves_with_created_since_days_filter(create_cve, auth_client):
+    client = auth_client()
+
+    create_cve("CVE-2021-44228")
+    create_cve("CVE-2022-22965")
+
+    old_cve = Cve.objects.get(cve_id="CVE-2021-44228")
+    old_cve.created_at = timezone.now() - timedelta(days=30)
+    old_cve.save(update_fields=["created_at"])
+
+    new_cve = Cve.objects.get(cve_id="CVE-2022-22965")
+    new_cve.created_at = timezone.now() - timedelta(days=2)
+    new_cve.save(update_fields=["created_at"])
+
+    response = client.get(f"{reverse('cve-list')}?created_since_days=7")
+
+    assert response.status_code == 200
+    assert sorted(c["cve_id"] for c in response.json()["results"]) == ["CVE-2022-22965"]

@@ -183,7 +183,7 @@ def test_cve_model_advisories_property(create_cve):
 
 
 @pytest.mark.django_db
-def test_cve_model_cvssV4_0_uses_first_mitre_entry_when_multiple(create_cve):
+def test_cve_model_cvssV4_0_uses_latest_mitre_entry_when_multiple(create_cve):
     cve = create_cve("CVE-2021-44228")
 
     cve._mitre_json = {
@@ -208,6 +208,6 @@ def test_cve_model_cvssV4_0_uses_first_mitre_entry_when_multiple(create_cve):
     }
 
     assert cve.cvssV4_0 == {
-        "score": 5.9,
-        "vector": "CVSS:4.0/AV:L/AC:L/AT:N/PR:H/UI:N/VC:L/VI:N/VA:N/SC:H/SI:N/SA:N",
+        "score": 0,
+        "vector": "CVSS:4.0/AV:L/AC:L/AT:P/PR:H/UI:N/VC:N/VI:N/VA:N/SC:N/SI:N/SA:N",
     }

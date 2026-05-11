@@ -140,14 +140,17 @@ class Cve(BaseModel):
                 self.mitre_json.get("containers", {}).get("cna", {}).get("metrics", [])
             )
             cvss4_entries = [m for m in mitre_metrics if "cvssV4_0" in m]
-            if len(cvss4_entries) > 1:
-                first = cvss4_entries[0]["cvssV4_0"]
+
+            if cvss4_entries:
+                latest = cvss4_entries[-1]["cvssV4_0"]
                 return {
-                    "score": first.get("baseScore"),
-                    "vector": first.get("vectorString"),
+                    "score": latest.get("baseScore"),
+                    "vector": latest.get("vectorString"),
                 }
+
         except (FileNotFoundError, KeyError):
             pass
+
         return self.metrics.get("cvssV4_0", {}).get("data", {})
 
     @property

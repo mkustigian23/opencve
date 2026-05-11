@@ -1,0 +1,10 @@
+[33mdc22fb3[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mv2.4.0[m[33m, [m[1;31morigin/v2.4.0[m[33m)[m Add regression test for created_since_days CVE API filter (Issue #593)
+[33md6b5397[m Add regression test for created_since_days CVE API filter (Issue #593)
+[33m319766e[m Merge branch 'v2.4.0' of https://github.com/mkustigian23/opencve into v2.4.0
+[33m562d683[m  added regression test for created_since_days CVE API filter for issue #593
+[33m581402f[m Gate signup UI based on ENABLE_SIGNUP setting for issue 665
+[33mc9d1157[m Add ENABLE_SIGNUP config and block signup route for issue 665
+[33m77f6082[m Add ENABLE_SIGNUP config and block signup route...
+[33m89e8e99[m Add ENABLE_SIGNUP config and block signup route...
+[33m014a654[m added a new API enhancement that allows the CVE endpoint to be filtered by CVEs created within the last X number of days using a created_since_days query parameter - Group Issue #593
+[33m32243d6[m added a new API enhancement that allows the CVE endpoint to be filtered by CVEs created within the last X number of days using a created_since_days query parameter - Group Issue #593

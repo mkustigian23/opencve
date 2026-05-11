@@ -146,3 +146,16 @@ def test_settings_social_access(client, auth_client, create_user):
     soup = BeautifulSoup(response.content, features="html.parser")
     content = soup.find("li", {"class": "active"}).text
     assert content.strip() == "Social Auth"
+
+
+@pytest.mark.django_db
+def test_signup_enabled(client):
+    response = client.get(reverse("account_signup"))
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+@override_settings(ENABLE_SIGNUP=False)
+def test_signup_disabled(client):
+    response = client.get(reverse("account_signup"))
+    assert response.status_code == 403
